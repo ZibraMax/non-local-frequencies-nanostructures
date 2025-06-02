@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import os
+from collections import Counter
 
 
 def parse_json(json_str):
@@ -40,9 +41,9 @@ for FOLDER in FOLDES:
             print(f"Loaded numpy array from {file}: {data}")
         else:
             print(f"Unsupported file type: {file}")
-    with open(f'{FOLDER}.txt', 'w') as f:
+    with open(f'{FOLDER}.csv', 'w') as f:
         f.write(
-            "rho,l,C11,C12,C44,duration,name,material,R,z1,l/R,Ct,eta1,eta2,eta3,eta4,eta5,eta6,link\n")
+            "rho,l,C11,C12,C44,duration,name,material,R,z1,l/R,Ct,eta1,eta2,eta3,eta4,eta5,eta6,count_eta1,count_eta2,count_eta3,count_eta4,count_eta5,count_eta6,link\n")
         for sym in syms:
             rho = sym['properties']['rho'][0]
             l = sym['properties']['l']
@@ -76,11 +77,16 @@ for FOLDER in FOLDES:
 
                 if eigv > 1e-3:
                     etas.append(round(eta, 7))
+            counts = Counter(etas)
             etas = np.unique(etas)
+            counts = [f"{counts[k]}" for k in etas]
+            if len(counts) < 6:
+                counts += ['-'] * (6 - len(counts))
             etas = [str(i) for i in etas]
             if len(etas) < 6:
                 etas += ['-'] * (6 - len(etas))
             etas = ','.join(etas)
+            counts = ','.join(counts)
             link = f"https://zibramax.github.io/FEMViewer/?mesh=https://raw.githubusercontent.com/ZibraMax/non-local-frequencies-nanostructures/refs/heads/main/{sym['filename']}&mode=6&magnif=6"
             f.write(
-                f"{rho},{l},{C11},{C12},{C44},{duration},{name},{material},{R},{z1},{l_R},{Ct},{etas},{link}\n")
+                f"{rho},{l},{C11},{C12},{C44},{duration},{name},{material},{R},{z1},{l_R},{Ct},{etas},{counts},{link}\n")
