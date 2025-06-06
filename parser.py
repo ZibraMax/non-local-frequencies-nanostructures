@@ -19,8 +19,7 @@ def parse_json(json_str):
         raise ValueError(f"Invalid JSON: {e}") from e
 
 
-FOLDES = ["Cubos", "Esferas"]
-FOLDER = "Cubos"
+FOLDES = ["Cubos", "Esferas", "Cubos_new_run", "Esferas_new_run"]
 for FOLDER in FOLDES:
     syms = []
     files = os.listdir(FOLDER)
