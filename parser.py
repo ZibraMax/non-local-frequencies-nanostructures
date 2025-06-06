@@ -74,7 +74,7 @@ for FOLDER in FOLDES:
                 omega = eigv**0.5
                 eta = omega*R/Ct
 
-                if eigv > 1e-3:
+                if eigv > 1e-2:
                     etas.append(round(eta, 7))
             counts = Counter(etas)
             etas = np.unique(etas)
