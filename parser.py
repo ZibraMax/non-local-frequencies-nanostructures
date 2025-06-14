@@ -19,7 +19,7 @@ def parse_json(json_str):
         raise ValueError(f"Invalid JSON: {e}") from e
 
 
-FOLDES = ["Cubos", "Esferas", "Cubos_new_run", "Esferas_new_run"]
+FOLDES = ["Esferas_cubic_material"]
 for FOLDER in FOLDES:
     syms = []
     files = os.listdir(FOLDER)
@@ -56,14 +56,20 @@ for FOLDER in FOLDES:
                 material = 'Germanium'
             elif C11 == 223100000:
                 material = 'Siliconium'
+            elif C11 == 166e6:
+                material = 'Silicon cubic'
+            elif C11 == 128.9e6:
+                material = 'Germanium cubic'
+            elif C11 == 1079e6:
+                material = 'Carbon cubic'
 
             duration = sym['properties']['duration']
             name = sym['properties']['name']
             # CaCube_8.05_2.0_20250428-105421
             L = float(name.split('_')[1])
             z1 = sym['properties']['z1']
-            if FOLDER == 'Cubos':
-                R = L/1.612
+            if 'Cubo' in FOLDER:
+                R = L/1.6119915
             else:
                 R = L
             l_R = l/R
@@ -74,7 +80,7 @@ for FOLDER in FOLDES:
                 omega = eigv**0.5
                 eta = omega*R/Ct
 
-                if eigv > 1e-2:
+                if eigv > 1e-2 and len(np.unique(etas)) < 6:
                     etas.append(round(eta, 7))
             counts = Counter(etas)
             etas = np.unique(etas)
