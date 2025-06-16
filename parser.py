@@ -19,8 +19,10 @@ def parse_json(json_str):
         raise ValueError(f"Invalid JSON: {e}") from e
 
 
-FOLDES = ["Esferas_cubic_material"]
+FOLDES = [i for i in os.listdir('.') if os.path.isdir(
+    i) and not i.startswith('.')]
 for FOLDER in FOLDES:
+    print(f'Parsing {FOLDER}')
     syms = []
     files = os.listdir(FOLDER)
     files = [os.path.join(FOLDER, file) for file in files]
