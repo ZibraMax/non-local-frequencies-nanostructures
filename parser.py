@@ -19,7 +19,7 @@ def parse_json(json_str):
         raise ValueError(f"Invalid JSON: {e}") from e
 
 
-FOLDES = ["Esferas_cubic_material_2"]
+FOLDES = ["Cubos_Enmallado"]
 for FOLDER in FOLDES:
     print(f'Parsing {FOLDER}')
     syms = []
@@ -43,7 +43,7 @@ for FOLDER in FOLDES:
             print(f"Unsupported file type: {file}")
     with open(f'{FOLDER}.csv', 'w') as f:
         f.write(
-            "rho,l,C11,C12,C44,duration,name,material,R,z1,l/R,Ct,eta1,eta2,eta3,eta4,eta5,eta6,count_eta1,count_eta2,count_eta3,count_eta4,count_eta5,count_eta6,link\n")
+            "rho,l,C11,C12,C44,duration,name,material,R,z1,l/R,Ct,ne,eta1,eta2,eta3,eta4,eta5,eta6,count_eta1,count_eta2,count_eta3,count_eta4,count_eta5,count_eta6,link\n")
         for sym in syms:
             rho = sym['properties']['rho'][0]
             l = sym['properties']['l']
@@ -83,6 +83,7 @@ for FOLDER in FOLDES:
 
                 if eigv > 1e-2 and len(np.unique(etas)) < 6:
                     etas.append(round(eta, 7))
+            ne = len(sym['properties']['rho'])
             counts = Counter(etas)
             etas = np.unique(etas)
             counts = [f"{counts[k]}" for k in etas]
@@ -95,4 +96,4 @@ for FOLDER in FOLDES:
             counts = ','.join(counts)
             link = f"https://zibramax.github.io/FEMViewer/?mesh=https://raw.githubusercontent.com/ZibraMax/non-local-frequencies-nanostructures/refs/heads/main/{sym['filename']}&mode=6&magnif=6"
             f.write(
-                f"{rho},{l},{C11},{C12},{C44},{duration},{name},{material},{R},{z1},{l_R},{Ct},{etas},{counts},{link}\n")
+                f"{rho},{l},{C11},{C12},{C44},{duration},{name},{material},{R},{z1},{l_R},{Ct},{ne},{etas},{counts},{link}\n")
